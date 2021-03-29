@@ -1,0 +1,10 @@
+/node_modules
+/dist
+/src/logs/
+test.js
+.env
+.VSCodeCounter/
+data/
+.vs/
+*.mp4
+*.mp3
