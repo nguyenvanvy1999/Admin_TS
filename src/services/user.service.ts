@@ -2,7 +2,6 @@ import User from '../models/user.model';
 import { UserDocument, Role, IUserDocument } from '../interfaces/user.interface';
 import HttpException from '../exceptions/http';
 import mongoose from 'mongoose';
-import { check } from '../utils/empty';
 import { IndexService } from './index.service';
 class UserService extends IndexService {
 	public async newUser(user: UserDocument): Promise<IUserDocument> {

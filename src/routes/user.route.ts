@@ -13,13 +13,9 @@ class UserRoute implements Route {
 	private initializeRoutes() {
 		this.router.use(multer().none());
 		this.router.use(authJWT);
-		this.router.get('/all', UserController.getAllUser);
-		this.router.get('/search', UserController.getUser);
-		this.router
-			.route('/')
-			.post(UserController.newUser)
-			.get(UserController.userProfile)
-			.delete(UserController.deleteUser);
+		this.router.get('/all', UserController.getAll);
+		this.router.get('/search', UserController.profile);
+		this.router.route('/').post(UserController.newUser).get(UserController.profile).delete(UserController.deleteUser);
 	}
 }
 

@@ -4,11 +4,9 @@ import HttpException from '../exceptions/http';
 import { check } from '../utils/empty';
 
 export class IndexService {
-	protected readonly isAdmin: boolean;
 	protected readonly role: Role;
 	constructor(isAdmin: boolean) {
-		this.isAdmin = isAdmin;
-		if (this.isAdmin) this.role = Role.admin;
+		if (isAdmin) this.role = Role.admin;
 		else this.role = Role.user;
 	}
 	public async findByEmail(email: string): Promise<IUserDocument> {
