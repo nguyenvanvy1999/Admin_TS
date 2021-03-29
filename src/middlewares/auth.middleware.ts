@@ -22,13 +22,3 @@ export async function authJWT(req: RequestWithUser, res: Response, next: NextFun
 		next(error);
 	}
 }
-
-export async function checkRole(req: RequestWithUser, res: Response, next: NextFunction) {
-	try {
-		const user = req.user;
-		if (user.role !== 'Admin') throw new HttpException(400, 'No permissions !');
-		next();
-	} catch (error) {
-		next(error);
-	}
-}

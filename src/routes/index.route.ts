@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import IndexController from '../controllers/index.controller';
+import HomeController from '../controllers/home.controller';
 import Route from '../interfaces/route.interface';
+import AdminController from '../controllers/admin.controller';
 
 class IndexRoute implements Route {
 	public path = '/';
@@ -11,7 +12,8 @@ class IndexRoute implements Route {
 	}
 
 	private initializeRoutes() {
-		this.router.get(`${this.path}`, IndexController.index);
+		this.router.get('/', HomeController.index);
+		this.router.route('/signin').post(AdminController.signInAdmin);
 	}
 }
 

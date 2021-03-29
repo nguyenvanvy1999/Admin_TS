@@ -29,8 +29,8 @@ const UserSchema: Schema = new Schema(
 		gender: { type: String, enum: Object.values(Gender), default: Gender.undisclosed },
 		address: { street: String, city: String, postCode: String },
 		password: { type: String, min: 4 },
-		isActive: { type: Boolean, default: false },
 		role: { type: String, enum: Object.values(Role), default: Role.user },
+		info: [String],
 	},
 	schemaOption
 );

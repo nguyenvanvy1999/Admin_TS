@@ -6,22 +6,27 @@ export enum Gender {
 	undisclosed = 'undisclosed',
 }
 export enum Role {
-	user = 'User',
 	admin = 'Admin',
+	user = 'User',
 }
-
 type Address = {
 	street: string;
 	city: string;
 	postCode: string;
 };
-
-export type SignIn = { email: string; password: string };
-
-export type NewUser = SignIn & { firstName: string; lastName: string; gender: Gender; address?: Address };
-
-export type UserDocument = NewUser & { isActive: boolean; role: Role };
-
+export type Account = {
+	email: string;
+	password: string;
+};
+export type UserDocument = Account & {
+	_id: string;
+	firstName: string;
+	lastName: string;
+	gender: Gender;
+	address?: Address;
+	role: Role;
+	info: any;
+};
 export interface IUserDocument extends Document, UserDocument {
 	_id: string;
 }
