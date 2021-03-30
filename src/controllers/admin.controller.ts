@@ -7,8 +7,8 @@ class AdminController extends IndexController {
 	public async signInAdmin(req: Request, res: Response, next: NextFunction) {
 		try {
 			const { email, password } = req.body;
-			const user = await AdminService.signIn(email, password);
-			const token = returnToken(user);
+			const admin = await AdminService.signIn(email, password);
+			const token = returnToken(admin);
 			return res.status(200).send({ token });
 		} catch (error) {
 			next(error);

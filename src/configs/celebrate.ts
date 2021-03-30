@@ -4,16 +4,19 @@ import Joi from './joi';
 const joiConfig = Joi.joiConfig;
 
 const Schema = {
-	user: {
-		signin: {
+	admin: {
+		signIn: {
 			[Segments.BODY]: { email: joiConfig.email, password: joiConfig.password },
 		},
-		signup: {
+	},
+	user: {
+		newUser: {
 			[Segments.BODY]: {
 				email: joiConfig.email,
 				firstName: joiConfig.string,
 				lastName: joiConfig.string,
 				password: joiConfig.password,
+				gender: joiConfig.string,
 				confirmPassword: joi
 					.any()
 					.equal(joi.ref('password'))
@@ -21,68 +24,7 @@ const Schema = {
 					.label('Confirm password')
 					.options({ messages: { 'any.only': '{{#label}} does not match' } }),
 			},
-		},
-		search: {
-			[Segments.PARAMS]: {},
-		},
-		editProfile: {
-			[Segments.BODY]: {
-				firstName: joiConfig.string,
-				lastName: joiConfig.string,
-			},
-		},
-		editPassword: {
-			[Segments.BODY]: {
-				password: joiConfig.password,
-				confirmPassword: joi.string().valid(joi.ref('password')).required(),
-			},
-		},
-		verifyAccount: {
-			[Segments.QUERY]: joiConfig.token,
-		},
-		getForgotPassword: {
-			[Segments.BODY]: { email: joiConfig.email },
-		},
-		postForgotPassword: {
-			[Segments.QUERY]: joiConfig.token,
-			[Segments.BODY]: {
-				password: joiConfig.password,
-				confirmPassword: joi.string().valid(joi.ref('password')).required(),
-			},
-		},
-	},
-	device: {
-		getDevice: {
-			[Segments.BODY]: {
-				type: joiConfig.string,
-				model: joiConfig.string,
-				name: joiConfig.string,
-				deviceID: joiConfig.string,
-			},
-		},
-		deviceID: {
-			[Segments.QUERY]: { deviceID: joiConfig._id },
-		},
-	},
-	zone: {
-		newZone: {
-			[Segments.BODY]: {
-				description: joiConfig.string,
-				name: joiConfig.string,
-				deviceID: joiConfig._id,
-			},
-		},
-		one: {
-			[Segments.BODY]: {
-				zoneID: joiConfig._id,
-				deviceID: joiConfig._id,
-			},
-		},
-		many: {
-			[Segments.BODY]: {
-				zoneID: joiConfig._id.required(),
-				devicesID: joi.array().items(joiConfig._id.required()),
-			},
+			devices: joi.array().items(joiConfig.string).min(1),
 		},
 	},
 };

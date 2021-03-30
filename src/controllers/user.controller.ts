@@ -19,6 +19,14 @@ class UserController extends IndexController {
 			next(error);
 		}
 	}
+	public async searchUser(req: Request, res: Response, next: NextFunction) {
+		try {
+			const users = await UserService.searchUser(req.body);
+			return res.status(200).send({ users });
+		} catch (error) {
+			next(error);
+		}
+	}
 }
 
 export default new UserController(false);

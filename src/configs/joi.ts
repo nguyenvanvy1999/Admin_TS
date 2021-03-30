@@ -2,7 +2,7 @@ import joi from 'joi';
 import jsonwebtoken from 'jsonwebtoken';
 
 class Joi {
-	private joiOID = joi.extend({
+	private readonly joiOID = joi.extend({
 		type: 'objectId',
 		messages: {
 			invalid: 'It must have a valid ObjectId',
@@ -15,7 +15,7 @@ class Joi {
 			if (!isValid(value)) return { value, errors: helpers.error('invalid') };
 		},
 	});
-	public joiJWT = joi.extend({
+	public readonly joiJWT = joi.extend({
 		type: 'jwt',
 		messages: {
 			invalid: 'It must have a valid JWT',
@@ -27,11 +27,10 @@ class Joi {
 			if (!decoded) return { value, errors: helpers.error('invalid') };
 		},
 	});
-	public joiConfig = {
+	public readonly joiConfig = {
 		string: joi.string().required(),
 		_id: this.joiOID.objectId().required(),
 		email: joi.string().email().required(),
-		username: joi.string().alphanum().min(4).max(20).required(),
 		password: joi.string().min(4).required(),
 		role: joi.string().valid('Admin', 'User'),
 		token: this.joiJWT.jwt().required(),

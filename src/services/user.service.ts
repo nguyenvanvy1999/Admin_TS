@@ -1,8 +1,9 @@
 import User from '../models/user.model';
-import { UserDocument, Role, IUserDocument } from '../interfaces/user.interface';
+import { UserDocument, IUserDocument } from '../interfaces/user.interface';
 import HttpException from '../exceptions/http';
 import mongoose from 'mongoose';
 import { IndexService } from './index.service';
+import { check } from '../utils/empty';
 class UserService extends IndexService {
 	public async newUser(user: UserDocument): Promise<IUserDocument> {
 		try {
@@ -12,8 +13,8 @@ class UserService extends IndexService {
 				firstName: user.firstName,
 				lastName: user.lastName,
 				password: user.password,
-				role: Role.user,
 				gender: user.gender,
+				devices: user.devices,
 			};
 			const newUser = new User(userDocument);
 			return await newUser.save();
@@ -23,11 +24,23 @@ class UserService extends IndexService {
 	}
 	public async deleteUser(email: string): Promise<IUserDocument> {
 		try {
-			return await User.findOneAndDelete({ email, role: Role.user });
+			return await User.findOneAndDelete({ email });
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async searchUser(user: UserDocument): Promise<IUserDocument[] | IUserDocument> {
+		try {
+			const { firstName, lastName } = user;
+			if (check(firstName) || check(lastName)) throw new HttpException(400, 'Query failed.Check your data');
+			return await User.find({
+				$and: [{ firstName: { $regex: firstName } }, { lastName: { $regex: lastName } }],
+			});
 		} catch (error) {
 			throw new HttpException(400, error.message);
 		}
 	}
 }
+import { format } from 'morgan';
 
 export default new UserService(false);

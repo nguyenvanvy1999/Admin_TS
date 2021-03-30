@@ -1,17 +1,16 @@
-import User from '../models/user.model';
-import { Role, IUserDocument } from '../interfaces/user.interface';
 import HttpException from '../exceptions/http';
 import { IndexService } from './index.service';
+import Admin from '../models/admin.model';
+import { IAdminDocument } from '../interfaces/admin.interface';
 
 class AdminService extends IndexService {
-	public async signIn(email: string, password: string): Promise<IUserDocument> {
+	public async signIn(email: string, password: string): Promise<IAdminDocument> {
 		try {
-			const user = await User.findOne({ email });
-			if (!user) throw new HttpException(400, 'Email wrong');
-			const isPassword = user.comparePassword(password);
+			const admin = await Admin.findOne({ email });
+			if (!admin) throw new HttpException(400, 'Email wrong');
+			const isPassword = admin.comparePassword(password);
 			if (!isPassword) throw new HttpException(400, 'Password wrong');
-			if (user.role !== Role.admin) throw new HttpException(400, 'No permission');
-			return user;
+			return admin;
 		} catch (error) {
 			throw new HttpException(400, error.message);
 		}

@@ -5,10 +5,6 @@ export enum Gender {
 	female = 'female',
 	undisclosed = 'undisclosed',
 }
-export enum Role {
-	admin = 'Admin',
-	user = 'User',
-}
 type Address = {
 	street: string;
 	city: string;
@@ -24,8 +20,8 @@ export type UserDocument = Account & {
 	lastName: string;
 	gender: Gender;
 	address?: Address;
-	role: Role;
 	info: any;
+	devices: string[];
 };
 export interface IUserDocument extends Document, UserDocument {
 	_id: string;

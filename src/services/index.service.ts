@@ -1,42 +1,35 @@
 import User from '../models/user.model';
-import { UserDocument, Role, IUserDocument } from '../interfaces/user.interface';
+import Admin from '../models/admin.model';
+import { IUserDocument } from '../interfaces/user.interface';
 import HttpException from '../exceptions/http';
 import { check } from '../utils/empty';
+import { IAdminDocument } from '../interfaces/admin.interface';
 
 export class IndexService {
-	protected readonly role: Role;
+	private readonly isAdmin: boolean;
 	constructor(isAdmin: boolean) {
-		if (isAdmin) this.role = Role.admin;
-		else this.role = Role.user;
+		this.isAdmin = isAdmin;
 	}
-	public async findByEmail(email: string): Promise<IUserDocument> {
+	public async findByEmail(email: string): Promise<IUserDocument | IAdminDocument> {
 		try {
-			return await User.findOne({ email, role: this.role });
+			if (this.isAdmin) return await Admin.findOne({ email });
+			return await User.findOne({ email });
 		} catch (error) {
 			throw new HttpException(400, error.message);
 		}
 	}
-	public async findByID(_id: string): Promise<IUserDocument> {
+	public async findByID(_id: string): Promise<IUserDocument | IAdminDocument> {
 		try {
-			return await User.findOne({ _id, role: this.role });
+			if (this.isAdmin) return await Admin.findById(_id);
+			return await User.findById(_id);
 		} catch (error) {
 			throw new HttpException(400, error.message);
 		}
 	}
-	public async findAll(): Promise<IUserDocument[]> {
+	public async findAll(): Promise<IUserDocument[] | IAdminDocument[]> {
 		try {
-			return await User.find({ role: this.role });
-		} catch (error) {
-			throw new HttpException(400, error.message);
-		}
-	}
-	public async searchUser(user: UserDocument): Promise<IUserDocument[] | IUserDocument> {
-		try {
-			const { firstName, lastName } = user;
-			if (check(firstName) || check(lastName)) throw new HttpException(400, 'Query failed.Check your data');
-			return await User.find({
-				$and: [{ firstName: { $regex: firstName } }, { lastName: { $regex: lastName } }, { role: this.role }],
-			});
+			if (this.isAdmin) return Admin.find({});
+			return User.find({});
 		} catch (error) {
 			throw new HttpException(400, error.message);
 		}

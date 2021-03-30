@@ -8,3 +8,5 @@ data/
 .vs/
 *.mp4
 *.mp3
+.vscode/
+.vs

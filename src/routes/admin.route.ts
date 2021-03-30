@@ -13,9 +13,8 @@ class AdminRoute implements Route {
 	private initializeRoutes() {
 		this.router.use(multer().none());
 		this.router.route('/signin').post(AdminController.signInAdmin);
-		this.router.route('/').post(AdminController.signInAdmin).get(authJWT, AdminController.profile);
+		this.router.get('/', authJWT, AdminController.profile);
 		this.router.get('/all', AdminController.getAll);
-		this.router.get('/search', AdminController.profile);
 	}
 }
 

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import AdminService from '../services/admin.service';
 import { RequestWithUser } from '../interfaces/auth.interface';
 import UserService from '../services/user.service';
+
 export class IndexController {
 	protected readonly isAdmin: boolean;
 	constructor(isAdmin: boolean) {
@@ -28,18 +29,6 @@ export class IndexController {
 			}
 			const user = await UserService.findByEmail(email);
 			return res.status(200).send({ user });
-		} catch (error) {
-			next(error);
-		}
-	}
-	public async search(req: RequestWithUser, res: Response, next: NextFunction) {
-		try {
-			if (this.isAdmin) {
-				const admins = await AdminService.searchUser(req.body);
-				return res.status(200).send({ admins });
-			}
-			const users = await AdminService.searchUser(req.body);
-			return res.status(200).send({ users });
 		} catch (error) {
 			next(error);
 		}

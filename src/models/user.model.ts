@@ -1,7 +1,7 @@
 import { Schema, Model, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import Config from '../configs/index';
-import { IUserDocument, Gender, Role } from '../interfaces/user.interface';
+import { IUserDocument, Gender } from '../interfaces/user.interface';
 
 const salt: number = parseInt(Config.get('salt'), 10);
 
@@ -29,8 +29,8 @@ const UserSchema: Schema = new Schema(
 		gender: { type: String, enum: Object.values(Gender), default: Gender.undisclosed },
 		address: { street: String, city: String, postCode: String },
 		password: { type: String, min: 4 },
-		role: { type: String, enum: Object.values(Role), default: Role.user },
 		info: [String],
+		devices: [String],
 	},
 	schemaOption
 );
