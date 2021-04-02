@@ -1,23 +1,25 @@
 import User from '../models/user.model';
-import { UserDocument, IUserDocument } from '../interfaces/user.interface';
-import HttpException from '../exceptions/http';
 import mongoose from 'mongoose';
-import { IndexService } from './index.service';
+import HttpException from '../exceptions/http';
+import { UserDocument, IUserDocument } from '../interfaces/user.interface';
 import { check } from '../utils/empty';
-class UserService extends IndexService {
+import { DeviceDocument } from '../interfaces/device.interface';
+class UserService {
 	public async newUser(user: UserDocument): Promise<IUserDocument> {
 		try {
 			const userDocument = {
 				_id: mongoose.Types.ObjectId(),
-				email: user.email,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				password: user.password,
-				gender: user.gender,
-				devices: user.devices,
+				...user,
 			};
 			const newUser = new User(userDocument);
 			return await newUser.save();
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async getUserByEmail(email: string) {
+		try {
+			return await User.findOne({ email });
 		} catch (error) {
 			throw new HttpException(400, error.message);
 		}
@@ -40,7 +42,26 @@ class UserService extends IndexService {
 			throw new HttpException(400, error.message);
 		}
 	}
+	public async editPassword(email: string, password: string): Promise<IUserDocument> {
+		try {
+			return await User.findOneAndUpdate({ email }, { password });
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async editProfile(email: string, data: UserDocument): Promise<IUserDocument> {
+		try {
+			return await User.findOneAndUpdate({ email }, { ...data });
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async addDevices(email: string, devices: string[]): Promise<IUserDocument> {
+		try {
+			return await User.findOneAndUpdate({ email }, { $push: { devices: { $each: devices } } });
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
 }
-import { format } from 'morgan';
-
-export default new UserService(false);
+export default new UserService();

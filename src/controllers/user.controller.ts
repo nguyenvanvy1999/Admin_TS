@@ -1,7 +1,11 @@
 import UserService from '../services/user.service';
 import { Request, Response, NextFunction } from 'express';
-import { IndexController } from './index.controller';
-class UserController extends IndexController {
+import { RequestWithUser } from '../interfaces/auth.interface';
+import User from '../models/user.model';
+import HttpException from '../exceptions/http';
+import { returnToken } from '../utils/jwt';
+import bcrypt from 'bcrypt';
+class UserController {
 	public async newUser(req: Request, res: Response, next: NextFunction) {
 		try {
 			const user = await UserService.newUser(req.body);
@@ -10,23 +14,52 @@ class UserController extends IndexController {
 			next(error);
 		}
 	}
-	public async deleteUser(req: Request, res: Response, next: NextFunction) {
+	public async signInUser(req: Request, res: Response, next: NextFunction) {
 		try {
-			const { email } = req.body;
-			await UserService.deleteUser(email);
-			return res.status(200).send({ message: 'Delete account success' });
+			const { email, password } = req.body;
+			const user = await User.findOne({ email });
+			if (!user) throw new HttpException(400, 'Email wrong!');
+			const isPassword = user.comparePassword(password);
+			if (!isPassword) throw new HttpException(400, 'Password wrong!');
+			const token = returnToken(user);
+			return res.status(200).send({ token });
 		} catch (error) {
 			next(error);
 		}
 	}
-	public async searchUser(req: Request, res: Response, next: NextFunction) {
+	public async userProfile(req: RequestWithUser, res: Response, next: NextFunction) {
 		try {
-			const users = await UserService.searchUser(req.body);
-			return res.status(200).send({ users });
+			const user = req.user;
+			return res.status(200).send({ user });
+		} catch (error) {
+			next(error);
+		}
+	}
+	public async editPassword(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
+			const user = req.user;
+			const { password } = req.body;
+			const isNewPassword = await bcrypt.compare(password, user.password);
+			if (isNewPassword) throw new HttpException(400, 'Please change password!');
+			await UserService.editPassword(user.email, password);
+			return res.status(200).send({ message: 'Edit password successfully !' });
+		} catch (error) {
+			next(error);
+		}
+	}
+	public async editProfile(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
+			const user = req.user;
+			await UserService.editProfile(user.email, req.body);
+		} catch (error) {
+			next(error);
+		}
+	}
+	public async addDevice(req: RequestWithUser, res: Response, next: NextFunction) {
+		try {
 		} catch (error) {
 			next(error);
 		}
 	}
 }
-
-export default new UserController(false);
+export default new UserController();

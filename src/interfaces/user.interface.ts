@@ -5,7 +5,7 @@ export enum Gender {
 	female = 'female',
 	undisclosed = 'undisclosed',
 }
-type Address = {
+export type Address = {
 	street: string;
 	city: string;
 	postCode: string;

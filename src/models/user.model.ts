@@ -1,7 +1,7 @@
 import { Schema, Model, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import Config from '../configs/index';
-import { IUserDocument, Gender } from '../interfaces/user.interface';
+import { IUserDocument, Gender, Address } from '../interfaces/user.interface';
 
 const salt: number = parseInt(Config.get('salt'), 10);
 

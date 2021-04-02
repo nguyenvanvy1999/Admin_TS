@@ -1,6 +1,6 @@
 import { parse } from 'dotenv';
-import * as joi from 'joi';
-import * as fs from 'fs';
+import joi from 'joi';
+import fs from 'fs';
 import { logger } from '../utils/logger';
 
 /**
@@ -48,6 +48,7 @@ class ConfigService {
 					.required(),
 				DEBUG: joi.boolean().default(false),
 				TEST: joi.boolean().default(false),
+				SEND_EMAIL: joi.boolean().default(false),
 				MONGO_URI: joi
 					.string()
 					.regex(/^mongodb/)
@@ -90,8 +91,8 @@ class ConfigService {
 	isDebug(): boolean {
 		return this.envConfig.DEBUG.toString() === 'true'; // because before, debug and test set to boolean
 	}
-	isTest(): boolean {
-		return this.envConfig.TEST.toString() === 'true';
+	isSendMail(): boolean {
+		return this.envConfig.SEND_MAIL.toString() === 'true';
 	}
 }
 

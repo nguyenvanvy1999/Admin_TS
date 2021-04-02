@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 export type DeviceDocument = {
-	name: string;
+	user: string;
+	deviceName: string;
 	deviceID: string;
 	deviceModel: string;
 	deviceType: string;

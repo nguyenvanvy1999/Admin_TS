@@ -10,7 +10,7 @@ const email = Config.get('smtp_user');
 class Mail {
 	public async sendMail(setting: MailConfig): Promise<SentMessageInfo> {
 		try {
-			if (Config.isTest()) return; // if TEST => no send mail
+			if (!Config.isSendMail()) return; // don`t send mail to test
 			const transporter = nodemailer.createTransport(config);
 			return await transporter.sendMail(setting);
 		} catch (error) {

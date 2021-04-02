@@ -1,9 +1,7 @@
 import HttpException from '../exceptions/http';
-import { IndexService } from './index.service';
 import Admin from '../models/admin.model';
 import { IAdminDocument } from '../interfaces/admin.interface';
-
-class AdminService extends IndexService {
+class AdminService {
 	public async signIn(email: string, password: string): Promise<IAdminDocument> {
 		try {
 			const admin = await Admin.findOne({ email });
@@ -15,6 +13,27 @@ class AdminService extends IndexService {
 			throw new HttpException(400, error.message);
 		}
 	}
+	public async findByEmail(email: string): Promise<IAdminDocument> {
+		try {
+			return await Admin.findOne({ email });
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async findByID(_id: string): Promise<IAdminDocument> {
+		try {
+			return await Admin.findById(_id);
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
+	public async findAll(): Promise<IAdminDocument[]> {
+		try {
+			return Admin.find({});
+		} catch (error) {
+			throw new HttpException(400, error.message);
+		}
+	}
 }
 
-export default new AdminService(true);
+export default new AdminService();
