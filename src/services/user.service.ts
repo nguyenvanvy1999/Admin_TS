@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import HttpException from '../exceptions/http';
 import { UserDocument, IUserDocument } from '../interfaces/user.interface';
 import { check } from '../utils/empty';
-import { DeviceDocument } from '../interfaces/device.interface';
+import { throwError } from '../middlewares/error.middleware';
 class UserService {
 	public async newUser(user: UserDocument): Promise<IUserDocument> {
 		try {
@@ -14,21 +14,21 @@ class UserService {
 			const newUser = new User(userDocument);
 			return await newUser.save();
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 	public async getUserByEmail(email: string) {
 		try {
 			return await User.findOne({ email });
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 	public async deleteUser(email: string): Promise<IUserDocument> {
 		try {
 			return await User.findOneAndDelete({ email });
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 	public async searchUser(user: UserDocument): Promise<IUserDocument[] | IUserDocument> {
@@ -39,28 +39,28 @@ class UserService {
 				$and: [{ firstName: { $regex: firstName } }, { lastName: { $regex: lastName } }],
 			});
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 	public async editPassword(email: string, password: string): Promise<IUserDocument> {
 		try {
-			return await User.findOneAndUpdate({ email }, { password });
+			return await User.findOneAndUpdate({ email }, { password }, { new: true });
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 	public async editProfile(email: string, data: UserDocument): Promise<IUserDocument> {
 		try {
-			return await User.findOneAndUpdate({ email }, { ...data });
+			return await User.findOneAndUpdate({ email }, { ...data }, { new: true });
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 	public async addDevices(email: string, devices: string[]): Promise<IUserDocument> {
 		try {
-			return await User.findOneAndUpdate({ email }, { $push: { devices: { $each: devices } } });
+			return await User.findOneAndUpdate({ email }, { $push: { devices: { $each: devices } } }, { new: true });
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			throwError(error);
 		}
 	}
 }

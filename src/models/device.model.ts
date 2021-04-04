@@ -19,7 +19,7 @@ const DeviceSchema: Schema = new Schema(
 		_id: Schema.Types.ObjectId,
 		user: { type: Schema.Types.ObjectId, ref: 'User', default: null },
 		deviceName: { type: String, required: true },
-		deviceID: { type: String, required: true },
+		deviceID: { type: String, required: true, unique: true, lowercase: true },
 		deviceModel: String,
 		deviceType: String,
 		info: [String],

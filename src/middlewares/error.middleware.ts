@@ -18,4 +18,8 @@ const handleNotFoundPage = (req: Request, res: Response) => {
 	return res.status(404).json({ message: `${req.method}${req.url} not found` });
 };
 
-export { errorMiddleware, handleNotFoundPage };
+const throwError = (error: Error) => {
+	throw new HttpException(400, error.message);
+};
+
+export { errorMiddleware, handleNotFoundPage, throwError };
