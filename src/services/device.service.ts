@@ -30,16 +30,30 @@ class DeviceService {
 			throwError(error);
 		}
 	}
-	public async getDeviceSameType(deviceType: string): Promise<IDeviceDocument[]> {
+	public async getDeviceSameType(user: string, deviceType: string): Promise<IDeviceDocument[]> {
 		try {
-			return await Device.find({ deviceType });
+			return await Device.find({ deviceType, user });
 		} catch (error) {
 			throwError(error);
 		}
 	}
-	public async linkDeviceToUser(user: string, devicesID: string[]): Promise<IDeviceDocument> {
+	public async linkDeviceToUser(user: string, devicesID: string[]): Promise<object> {
 		try {
 			return await Device.updateMany({ deviceID: { $in: devicesID } }, { user }, { new: true });
+		} catch (error) {
+			throwError(error);
+		}
+	}
+	public async unlinkDeviceToUser(devicesID: string[]): Promise<object> {
+		try {
+			return await Device.updateMany({ deviceID: { $in: devicesID } }, { user: null }, { new: true });
+		} catch (error) {
+			throwError(error);
+		}
+	}
+	public async getDeviceUser(user: string): Promise<IDeviceDocument[]> {
+		try {
+			return await Device.find({ user });
 		} catch (error) {
 			throwError(error);
 		}
