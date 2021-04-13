@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
 
 export type AdminDocument = {
+	_id: string;
 	email: string;
 	password: string;
 	info: any;

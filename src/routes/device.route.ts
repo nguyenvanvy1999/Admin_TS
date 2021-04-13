@@ -8,6 +8,8 @@ class DeviceRoute implements Route {
 	constructor() {
 		this.initializeRoutes();
 	}
-	private initializeRoutes() {}
+	private initializeRoutes() {
+		this.router.get('/', DeviceController.getAllDeviceUser);
+	}
 }
 export default new DeviceRoute();

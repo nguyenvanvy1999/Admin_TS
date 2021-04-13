@@ -69,7 +69,7 @@ class App {
 			swaggerDefinition: {
 				info: { title: 'REST API', version: '1.0.0', description: 'Nodejs Database built with typescript' },
 			},
-			apis: ['swagger.yaml'],
+			apis: ['swagger.yaml', 'swagger.json'],
 		};
 		const specs = swaggerJSDoc(options);
 		this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));

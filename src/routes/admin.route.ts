@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import Route from '../interfaces/route.interface';
 import multer from 'multer';
-import { authJWT } from '../middlewares/auth.middleware';
+import { authAdmin, authJWT } from '../middlewares/auth.middleware';
 import AdminController from '../controllers/admin.controller';
+import UserController from '../controllers/user.controller';
 
 class AdminRoute implements Route {
 	public path: string = '/admin';
@@ -12,18 +13,18 @@ class AdminRoute implements Route {
 	}
 	private initializeRoutes() {
 		this.router.use(multer().none());
-		this.router.route('/signin').post(AdminController.signInAdmin);
-		this.router.get('/', authJWT, AdminController.adminProfile);
+		this.router.post('/signin', AdminController.signInAdmin);
+		this.router.get('/', authJWT, UserController.userProfile);
 		this.router.get('/all', authJWT, AdminController.getAllAdmin);
 		this.router.get('/:email', authJWT, AdminController.getAdminByEmail);
 		this.router
 			.route('/user')
-			.all(authJWT)
+			.all(authJWT, authAdmin)
 			.get(AdminController.searchUser)
-			.delete(AdminController.deleteUser)
-			.post(AdminController.newUser)
-			.put(AdminController.editUserProfile);
-		this.router.put('/password', AdminController.editUserPassword);
+			.delete(UserController.deleteUser)
+			.post(UserController.newUser)
+			.put(UserController.editProfile);
+		this.router.put('user/password', UserController.editPassword);
 	}
 }
 

@@ -5,7 +5,6 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "jest",
-		"start": "tsc && nodemon dist/index.js",
 		"dev": "nodemon --config nodemon.json src/index.ts"
 	},
 	"jest": {
@@ -39,6 +38,7 @@
 		"serve-favicon": "^2.5.0",
 		"swagger-jsdoc": "6.0.0",
 		"swagger-ui-express": "^4.1.6",
+		"tsoa": "^3.6.1",
 		"winston": "^3.3.3",
 		"winston-daily-rotate-file": "^4.5.0"
 	},
